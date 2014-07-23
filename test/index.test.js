@@ -64,10 +64,16 @@ describe('express-server-cluster', function () {
 
   it('should handle failed requests', function (done) {
     var server = express()
+      , requestErrorCalled = false
     server.get('/', function () {
       setTimeout(function() {
         throw new Error('Asynchronous error')
       }, 100)
+    })
+    server.on('requestError', function (error, req) {
+      assert(error, 'error should exist')
+      assert(req, 'req should exist')
+      requestErrorCalled = true
     })
     server.on('started', function (server) {
       request(server)
@@ -75,6 +81,7 @@ describe('express-server-cluster', function () {
       .expect(500)
       .end(function (error) {
         assert(error, 'error should exist')
+        assert.equal(requestErrorCalled, true)
         done()
       })
 

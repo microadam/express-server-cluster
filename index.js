@@ -16,8 +16,7 @@ function createServerCluster(server, logger, options) {
   }
 
   var defaults =
-    { url: 'http://localhost:5678'
-    , port: 5678
+    { port: 5678
     , numProcesses: Math.ceil(cpus.length * 0.7)
     }
   options = extend({}, defaults, options)
@@ -29,22 +28,19 @@ function createServerCluster(server, logger, options) {
 
       var httpServer = http.createServer(function (req, res) {
 
-        var resd = domain.create()
-        resd.add(req)
-        resd.add(res)
+        var reqd = domain.create()
+        reqd.add(req)
+        reqd.add(res)
 
-        resd.on('error', function (error) {
-          logger.error('Error', error, req.url)
-          resd.dispose()
+        reqd.on('error', function (error) {
+          server.emit('requestError', error, req.url)
+          reqd.dispose()
         })
 
-        resd.run(function () {
+        reqd.run(function () {
           return server(req, res)
         })
       }).listen(options.port, function () {
-        logger.info('Server running on address: '
-          + httpServer.address().address + ' port: ' + httpServer.address().port
-          + ' URL: ' + options.url)
         server.emit('started', httpServer)
       })
     })
