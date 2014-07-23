@@ -17,14 +17,18 @@ var express = require('express')
   , server = express()
   , createServerCluster = require('express-server-cluster')
   , options =
-    { url: 'http://localhost:5678'
-    , port: 5678
+    { port: 5678
     , numProcesses: 1
     }
 
 server.on('started', function (server) {
   console.log('server started on: ' + server.address().port)
 })
+
+server.on('requestError', function (error, req) {
+  console.error('request error: ' + error.message + ': ' + req.url)
+})
+
 createServerCluster(server, console, options)
 
 ```
