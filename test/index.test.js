@@ -46,7 +46,7 @@ describe('express-server-cluster', function () {
   it('should handle successful requests', function (done) {
     var server = express()
     server.get('/', function (req, res) {
-      res.send(200)
+      res.sendStatus(200)
     })
     server.on('started', function (server) {
       request(server)
