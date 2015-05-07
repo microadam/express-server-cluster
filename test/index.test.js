@@ -2,6 +2,7 @@ var assert = require('assert')
   , request = require('supertest')
   , express = require('express')
   , createServerCluster = require('../')
+  , logger = require('mc-logger')
   , options =
     { url: 'http://localhost:5679'
     , port: 5679
@@ -30,7 +31,7 @@ describe('express-server-cluster', function () {
       server.close()
       done()
     })
-    createServerCluster(server, console, options)
+    createServerCluster(server, logger, options)
   })
 
   it('should start up a clustered server with default options', function (done) {
@@ -40,13 +41,13 @@ describe('express-server-cluster', function () {
       server.close()
       done()
     })
-    createServerCluster(server, console)
+    createServerCluster(server, logger)
   })
 
   it('should handle successful requests', function (done) {
     var server = express()
     server.get('/', function (req, res) {
-      res.send(200)
+      res.sendStatus(200)
     })
     server.on('started', function (server) {
       request(server)
@@ -59,7 +60,7 @@ describe('express-server-cluster', function () {
       })
 
     })
-    createServerCluster(server, console, options)
+    createServerCluster(server, logger, options)
   })
 
   it('should handle failed requests', function (done) {
@@ -86,7 +87,7 @@ describe('express-server-cluster', function () {
       })
 
     })
-    createServerCluster(server, console, options)
+    createServerCluster(server, logger, options)
   })
 
 })
