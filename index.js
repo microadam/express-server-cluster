@@ -45,6 +45,13 @@ function createServerCluster(server, logger, options) {
       })
     })
 
+    serverDomain.on('error', function (err) {
+      if (err.code === 'EADDRINUSE') {
+        logger.error('Error EADDRINUSE. Port %d already in use.', options.port)
+      }
+      throw err
+    })
+
   }
   , { logger: logger
     , size: options.numProcesses
