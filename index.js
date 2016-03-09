@@ -1,7 +1,6 @@
 module.exports = createServerCluster
 
-var domain = require('domain')
-  , http = require('http')
+var http = require('http')
   , clusterMaster = require('clustered')
   , cpus = require('os').cpus()
   , extend = require('lodash.assign')
@@ -22,38 +21,14 @@ function createServerCluster(server, logger, options) {
   options = extend({}, defaults, options)
 
   clusterMaster(function () {
-
-    var serverDomain = domain.create()
-    serverDomain.run(function () {
-
       var httpServer = http.createServer(function (req, res) {
-
-        var reqd = domain.create()
-        reqd.add(req)
-        reqd.add(res)
-
-        reqd.on('error', function (error) {
-          server.emit('requestError', error, req.url)
-          reqd.dispose()
-        })
-
-        reqd.run(function () {
-          return server(req, res)
-        })
+        return server(req, res)
       }).listen(options.port, function () {
         server.emit('started', httpServer)
       })
-    })
-
-    serverDomain.on('error', function (err) {
-      if (err.code === 'EADDRINUSE') {
-        logger.error('Error EADDRINUSE. Port %d already in use.', options.port)
-      }
-      throw err
-    })
-
-  }
+    }
   , { logger: logger
     , size: options.numProcesses
-    })
+    }
+  )
 }

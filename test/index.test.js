@@ -63,31 +63,4 @@ describe('express-server-cluster', function () {
     createServerCluster(server, logger, options)
   })
 
-  it('should handle failed requests', function (done) {
-    var server = express()
-      , requestErrorCalled = false
-    server.get('/', function () {
-      setTimeout(function() {
-        throw new Error('Asynchronous error')
-      }, 100)
-    })
-    server.on('requestError', function (error, req) {
-      assert(error, 'error should exist')
-      assert(req, 'req should exist')
-      requestErrorCalled = true
-    })
-    server.on('started', function (server) {
-      request(server)
-      .get('/')
-      .expect(500)
-      .end(function (error) {
-        assert(error, 'error should exist')
-        assert.equal(requestErrorCalled, true)
-        done()
-      })
-
-    })
-    createServerCluster(server, logger, options)
-  })
-
 })
