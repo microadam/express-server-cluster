@@ -3,15 +3,15 @@
   "description": "Create a clustered express server",
   "version": "2.0.0",
   "dependencies": {
-    "clustered": "^0.2.0",
-    "lodash.assign": "^2.4.1"
+    "clustered": "^0.2.1",
+    "lodash.assign": "^4.0.6"
   },
   "scripts": {
-    "lint": "./node_modules/.bin/jshint .",
-    "checkStyle": "./node_modules/.bin/jscs .",
+    "lint": "jshint .",
+    "checkStyle": "jscs .",
     "pretest": "npm run-script lint && npm run-script checkStyle",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha test",
-    "posttest": "./node_modules/.bin/istanbul check-coverage --statements 85 --branches 65 --functions 85 --lines 85 && rm -rf coverage",
+    "test": "istanbul cover _mocha test",
+    "posttest": "istanbul check-coverage --statements 85 --branches 65 --functions 85 --lines 85 && rm -rf coverage",
     "prepublish": "npm test && npm prune"
   },
   "publishConfig": {
@@ -20,13 +20,13 @@
   "author": "Adam Duncan <adam.jd@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "express": "^4.6.1",
-    "istanbul": "^0.2.7",
     "jscs": "^1.4.5",
     "jshint": "^2.5.0",
+    "express": "^4.13.4",
+    "istanbul": "^0.4.2",
     "mc-logger": "0.0.0",
-    "mocha": "^1.18.2",
-    "supertest": "^0.13.0"
+    "mocha": "^2.4.5",
+    "supertest": "^1.2.0"
   },
   "repository": {
     "type": "git",
