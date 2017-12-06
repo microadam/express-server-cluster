@@ -2,7 +2,6 @@ module.exports = createServerCluster
 
 var http = require('http')
   , clusterMaster = require('clustered')
-  , cpus = require('os').cpus()
   , extend = require('lodash.assign')
 
 function createServerCluster(server, logger, options) {
@@ -16,7 +15,7 @@ function createServerCluster(server, logger, options) {
 
   var defaults =
     { port: 5678
-    , numProcesses: Math.ceil(cpus.length * 0.7)
+    , numProcesses: 1
     }
   options = extend({}, defaults, options)
 
